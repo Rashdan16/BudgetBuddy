@@ -8,28 +8,6 @@ import 'pages/transactions_page.dart';
 
 // ─── Model ─────────────────────────────────────────────────────────────────────
 
-// This class represents a single transaction item with an ID and amount
-class TransactionItem {
-  // The unique ID for each transaction
-  final int id;
-
-  // The amount spent in the transaction
-  final double amount;
-
-  // Constructor to create a TransactionItem with required id and amount
-  TransactionItem({required this.id, required this.amount});
-
-  // Factory method to create a TransactionItem from JSON data
-  factory TransactionItem.fromJson(Map<String, dynamic> json) {
-    return TransactionItem(
-      // Extracts the 'id' from the JSON map and ensures it's an integer
-      id: json['id'] as int,
-
-      // Extracts the 'amount' from the JSON and converts it to a double
-      amount: (json['amount'] as num).toDouble(),
-    );
-  }
-}
 
 
 // ─── App Entry Point ────────────────────────────────────────────────────────────
@@ -93,9 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          _transactions = data
-              .map((e) => TransactionItem.fromJson(e as Map<String, dynamic>))
-              .toList();
+          _transactions =
+              data.map((e) => Transaction.fromJson(e as Map<String, dynamic>)).toList();
         });
       } else {
         // Optionally show an error SnackBar
