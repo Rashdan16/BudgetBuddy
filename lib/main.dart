@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'models/transaction.dart';
+import 'pages/transactions_page.dart';
+// ─── Imports ────────────────────────────────────────────────────────────────────
+
 
 // ─── Model ─────────────────────────────────────────────────────────────────────
 
@@ -60,7 +64,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _amountCtrl = TextEditingController();
-  List<TransactionItem> _transactions = [];
+  // This list holds all the transactions fetched from the server
+  // It starts empty and will be populated after fetching data
+  List<Transaction> _transactions = [];
+  // This controller handles the input for the transaction amount
+
+  /// Computes the sum of all transaction amounts.
+  double get _totalSpent =>
+      _transactions.fold(0.0, (sum, tx) => sum + tx.amount);
+
 
   @override
   void initState() {
@@ -152,24 +164,21 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Save Transaction'),
             ),
             const SizedBox(height: 24),
-            // Transaction list
-            Expanded(
-              child: _transactions.isEmpty
-                  ? const Center(child: Text('No transactions yet'))
-                  : ListView.builder(
-                      itemCount: _transactions.length,
-                      itemBuilder: (ctx, i) {
-                        final tx = _transactions[i];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            child: Text('£${tx.amount.toStringAsFixed(0)}'),
-                          ),
-                          title: const Text('Transaction'),
-                          subtitle:
-                              Text('Amount: £${tx.amount.toStringAsFixed(2)}'),
-                        );
-                      },
-                    ),
+            Text(
+              'Total Spent: £${_totalSpent.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TransactionsPage(transactions: _transactions),
+                  ),
+                );    
+              },
+              child: const Text('View All Transactions'),,
             ),
           ],
         ),
