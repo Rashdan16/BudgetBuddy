@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );    
               },
-              child: const Text('View All Transactions'),,
+              child: const Text('View All Transactions'),
             ),
           ],
         ),
