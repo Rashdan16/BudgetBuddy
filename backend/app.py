@@ -29,7 +29,7 @@ def add_transaction():
     db.session.commit()
 
     # Return the created record
-    return jsonify({'id': tx.id, 'amount': tx.amount}), 201
+    return jsonify({'id': tx.id, 'amount': tx.amount, 'created_at': tx.created_at.isoformat()}), 201
 
 
 # ─── List All Transactions ─────────────────────────────────────────────────────
@@ -38,7 +38,7 @@ def list_transactions():
     # Fetch all, newest first
     txs = Transaction.query.order_by(Transaction.id.desc()).all()
     # Convert to list of dicts
-    result = [{'id': t.id, 'amount': t.amount} for t in txs]
+    result = [{'id': t.id, 'amount': t.amount, 'created_at': t.created_at.isoformat()} for t in txs]
     return jsonify(result), 200
 
 

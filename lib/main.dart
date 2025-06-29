@@ -101,11 +101,14 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       if (response.statusCode == 201) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _transactions.insert(0, Transaction.fromJson(data));
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Transaction saved! ✅')),
         );
         _amountCtrl.clear();
-        await _loadTransactions(); // refresh list
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: ${response.body}')),

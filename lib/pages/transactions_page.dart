@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../models/transaction.dart';
+import 'package:intl/intl.dart';
 
 /// A full-screen page that shows a scrollable list of past transactions.
 class TransactionsPage extends StatelessWidget {
@@ -22,13 +23,16 @@ class TransactionsPage extends StatelessWidget {
               itemCount: transactions.length,
               itemBuilder: (ctx, i) {
                 final tx = transactions[i];
+                final dateStr = DateFormat.yMd().add_jm().format(tx.date);
                 return ListTile(
                   leading: CircleAvatar(
-                    child: Text('£${tx.amount.toStringAsFixed(0)}',
-                        style: const TextStyle(fontSize: 12)),
+                    child: Text(
+                      '£${tx.amount.toStringAsFixed(0)}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
-                  title: Text('Transaction #${tx.id}'),
-                  subtitle: Text('Amount: £${tx.amount.toStringAsFixed(2)}'),
+                  title: const Text('Transaction'),
+                  subtitle: Text('£${tx.amount.toStringAsFixed(2)} on $dateStr'),
                 );
               },
             ),
