@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -5,10 +7,7 @@ import 'models/transaction.dart';
 import 'pages/transactions_page.dart';
 // ─── Imports ────────────────────────────────────────────────────────────────────
 
-
 // ─── Model ─────────────────────────────────────────────────────────────────────
-
-
 
 // ─── App Entry Point ────────────────────────────────────────────────────────────
 
@@ -51,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
   double get _totalSpent =>
       _transactions.fold(0.0, (sum, tx) => sum + tx.amount);
 
-
   @override
   void initState() {
     super.initState();
@@ -71,8 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          _transactions =
-              data.map((e) => Transaction.fromJson(e as Map<String, dynamic>)).toList();
+          _transactions = data
+              .map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+              .toList();
         });
       } else {
         // Optionally show an error SnackBar
@@ -101,23 +100,20 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       if (response.statusCode == 201) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-        setState(() {
-          _transactions.insert(0, Transaction.fromJson(data));
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Transaction saved! ✅')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Transaction saved! ✅')));
         _amountCtrl.clear();
+        await _loadTransactions(); // refresh list
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${response.body}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${response.body}')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Network error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Network error: $e')));
     }
   }
 
@@ -154,9 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TransactionsPage(transactions: _transactions),
+                    builder: (context) =>
+                        TransactionsPage(transactions: _transactions),
                   ),
-                );    
+                );
               },
               child: const Text('View All Transactions'),
             ),

@@ -8,10 +8,8 @@ import 'package:intl/intl.dart';
 class TransactionsPage extends StatelessWidget {
   final List<Transaction> transactions;
 
-  const TransactionsPage({
-    Key? key,
-    required this.transactions,
-  }) : super(key: key);
+  const TransactionsPage({Key? key, required this.transactions})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,6 @@ class TransactionsPage extends StatelessWidget {
               itemCount: transactions.length,
               itemBuilder: (ctx, i) {
                 final tx = transactions[i];
-                final dateStr = DateFormat.yMd().add_jm().format(tx.date);
                 return ListTile(
                   leading: CircleAvatar(
                     child: Text(
@@ -32,7 +29,10 @@ class TransactionsPage extends StatelessWidget {
                     ),
                   ),
                   title: const Text('Transaction'),
-                  subtitle: Text('£${tx.amount.toStringAsFixed(2)} on $dateStr'),
+                  subtitle: Text(
+                    'Amount: £${tx.amount.toStringAsFixed(2)}'
+                    '${tx.createdAt != null ? ' on ${DateFormat.yMMMd().format(tx.createdAt!)}' : ''}',
+                  ),
                 );
               },
             ),

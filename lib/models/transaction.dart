@@ -1,4 +1,4 @@
-// lib/models/transactions.dart
+// lib/models/transaction.dart
 
 /// A simple data class representing one transaction.
 class Transaction {
@@ -8,23 +8,23 @@ class Transaction {
   /// The amount spent in this transaction.
   final double amount;
 
-  /// Time when the transaction was created.
-  final DateTime date;
+  /// (Optional) When this transaction was created.
+  /// If your backend is not yet sending this field, you can
+  /// remove it for now or mark it nullable.
+  final DateTime? createdAt;
 
-  /// Constructor: both fields are required.
-  Transaction({
-    required this.id,
-    required this.amount,
-    required this.date,
-  });
+  Transaction({required this.id, required this.amount, this.createdAt});
 
   /// Factory builder: makes a Transaction from a JSON map.
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'] as int,
-      // JSON numbers can be int or double, so we normalize to double:
       amount: (json['amount'] as num).toDouble(),
-      date: DateTime.parse(json['created_at'] as String),
+      // If your endpoint returns "created_at": "2025-06-29T20:13:35Z"
+      // uncomment the next line; otherwise leave createdAt null.
+      createdAt: json.containsKey('created_at')
+          ? DateTime.parse(json['created_at'] as String)
+          : null,
     );
   }
 }
